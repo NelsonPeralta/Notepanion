@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/niLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".NoteInstanceActivity">
+
+    <EditText
+        android:id="@+id/niTitle"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="81dp" />
+
+    <EditText
+        android:id="@+id/niDes"
+        android:layout_width="300dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="Description"
+        android:inputType="text|textMultiLine"
+        tools:layout_editor_absoluteX="81dp" />
+
+    // gravity top makes the text start at the top
+    // background null removes the underline
+
+    <LinearLayout
+        android:id="@+id/niBtnLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/niSaveBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:onClick="Save"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/niDoneBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:onClick="CloseNote"
+            android:text="Done" />
+    </LinearLayout>
+</LinearLayout>

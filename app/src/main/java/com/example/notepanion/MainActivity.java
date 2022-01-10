@@ -23,18 +23,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     EditText usernameTextField, passwordTextField;
     Button loginBtn;
-    //private String URL = "http://localhost/notepanion/login.php";
+    private String URL = "https://metalraiders.com/notepanion/login.php";
 
     // http://10.0.2.2:xxxx is the IP that is a special alias to your host loopback interface (127.0.0.1 on your dev machine)
     // Reference: https://stackoverflow.com/questions/54810579/com-android-volley-noconnectionerror-java-net-connectexception-connection-refu
     // On internet connection error: check URL, reinstall app, make sure internet permission and access network state
-    private String URL = "http://10.0.2.2/androidStudioMySqlDemo/login.php";
+//    private String URL = "http://10.0.2.2/androidStudioMySqlDemo/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +50,35 @@ public class MainActivity extends AppCompatActivity {
         loginBtn = findViewById(R.id.loginBtn);
     }
 
-    public  void Login(View view){
+    public void Login(View view) {
         Log.i("USERNAME", usernameTextField.getText().toString());
         Log.i("PASSWORD", passwordTextField.getText().toString());
 
         String username = usernameTextField.getText().toString(), password = passwordTextField.getText().toString();
 
-        if(!username.equals("") && !password.equals("")){
+        if (!username.equals("") && !password.equals("")) {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("res", response);
-                    if (response.equals("success")) {
-                        Intent intent = new Intent(MainActivity.this, Success.class);
+                    if (!response.equals("failure")) {
+                        Log.d("res", response);
+                        JSONArray array = null;
+                        try {
+                            array = new JSONArray(response);
+                            JSONObject row = new JSONObject(array.get(0).toString());
+
+                            int id = row.getInt("id");
+                            new User(id, username);
+
+                            Intent intent = new Intent(MainActivity.this, NotesActivity.class);
                         startActivity(intent);
                         finish();
-                    } else if (response.equals("failure")) {
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("EXCEPTION", e.toString());
+                        }
+                    } else {
                         Toast.makeText(MainActivity.this, "Invalid Login Id/Password", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -87,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("MESSAGE", message);
                     Log.i("ERROR", error.toString());
                 }
-            }){
+            }) {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> data = new HashMap<>();
@@ -98,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
             };
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             requestQueue.add(stringRequest);
-        }else{
+        } else {
             Toast.makeText(this, "Fields can not be empty!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // Handling states: https://developer.android.com/guide/components/activities/state-changes
 }
