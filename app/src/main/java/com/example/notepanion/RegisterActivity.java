@@ -5,9 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -30,57 +29,37 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
-    EditText usernameTextField, passwordTextField;
-    Button loginBtn;
-    private String URL = "https://metalraiders.com/notepanion/login.php";
-
-    // http://10.0.2.2:xxxx is the IP that is a special alias to your host loopback interface (127.0.0.1 on your dev machine)
-    // Reference: https://stackoverflow.com/questions/54810579/com-android-volley-noconnectionerror-java-net-connectexception-connection-refu
-    // On internet connection error: check URL, reinstall app, make sure internet permission and access network state
-//    private String URL = "http://10.0.2.2/androidStudioMySqlDemo/login.php";
+public class RegisterActivity extends AppCompatActivity {
+    EditText usernameText, passwordText;
+    String URL = "https://metalraiders.com/notepanion/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
-        usernameTextField = findViewById(R.id.unTxt);
-        passwordTextField = findViewById(R.id.pwTxt);
-        loginBtn = findViewById(R.id.mainLoginBtn);
+        usernameText = findViewById(R.id.registerUsername);
+        passwordText = findViewById(R.id.registerPassword);
     }
 
-    public void Login(View view) {
-        Log.i("USERNAME", usernameTextField.getText().toString());
-        Log.i("PASSWORD", passwordTextField.getText().toString());
-
-        String username = usernameTextField.getText().toString(), password = passwordTextField.getText().toString();
+    public void Register(View view) {
+        String username = usernameText.getText().toString(), password = passwordText.getText().toString();
 
         if (!username.equals("") && !password.equals("")) {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i("LOGIN ON RESPONSE", response);
+                    Log.i("REGISTER ON RESPONSE", response);
                     if (!response.contains("failure")) {
                         Log.d("res", response);
-                        JSONArray array = null;
-                        try {
-                            array = new JSONArray(response);
-                            JSONObject row = new JSONObject(array.get(0).toString());
 
-                            int id = row.getInt("id");
-                            new User(id, username);
-
-                            Intent intent = new Intent(MainActivity.this, NotesActivity.class);
-                            startActivity(intent);
-                            finish();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Log.d("EXCEPTION", e.toString());
-                        }
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        Toast.makeText(MainActivity.this, "Invalid Login Id/Password", Toast.LENGTH_SHORT).show();
+                        if (response.contains("Duplicate")) {
+                            Toast.makeText(RegisterActivity.this, "Username already exists.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }, new Response.ErrorListener() {
@@ -101,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (error instanceof TimeoutError) {
                         message = "Connection TimeOut! Please check your internet connection.";
                     }
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
                     Log.i("MESSAGE", message);
                     Log.i("ERROR", error.toString());
                 }
@@ -109,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> data = new HashMap<>();
-                    data.put("email", username);
+                    data.put("username", username);
                     data.put("password", password);
                     return data;
                 }
@@ -120,12 +99,4 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Fields can not be empty!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void GoToRegisterPage(View view){
-        Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-        startActivity(intent);
-    }
-
-
-    // Handling states: https://developer.android.com/guide/components/activities/state-changes
 }

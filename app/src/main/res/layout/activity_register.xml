@@ -1,53 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:background="#e8f4f8"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#e8f4f8">
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Notepanion"
-        android:textSize="34sp"
-        />
+    tools:context=".RegisterActivity">
 
     <EditText
-        android:id="@+id/unTxt"
+        android:id="@+id/registerUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Username"
         android:inputType="textPersonName"
+        android:hint="Username"
         android:minHeight="48dp" />
 
     <EditText
-        android:id="@+id/pwTxt"
+        android:id="@+id/registerPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password"
         android:inputType="textPassword"
+        android:hint="Password"
         android:minHeight="48dp" />
 
     <Button
-        android:id="@+id/mainLoginBtn"
+        android:id="@+id/registerBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:onClick="Login"
-        />
-
-    <Button
-        android:id="@+id/mainRegisterBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="GoToRegisterPage"
+        android:onClick="Register"
         android:text="Register" />
-
 </LinearLayout>

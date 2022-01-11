@@ -54,7 +54,7 @@ public class NotesActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("NOTES", response);
-                if (!response.equals("failure")) {
+                if (!response.contains("failure")) {
                     JSONArray array = null;
 
                     ArrayList<String> tutorials = new ArrayList<>();
@@ -93,7 +93,7 @@ public class NotesActivity extends AppCompatActivity {
                     simpleList.setOnItemClickListener(new ListViewListener());
 
                 } else
-                    Toast.makeText(NotesActivity.this, "Invalid Login Id/Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NotesActivity.this, "No notes in database.", Toast.LENGTH_SHORT).show();
 
             }
         }, new Response.ErrorListener() {

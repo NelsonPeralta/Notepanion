@@ -62,7 +62,7 @@ public class NoteInstanceActivity extends AppCompatActivity {
 
         }
 
-        if(noteRow.getId() == 0){
+        if (noteRow.getId() == 0) {
             LinearLayout ll = findViewById(R.id.niBtnLayout);
             ll.removeView(findViewById(R.id.niDoneBtn));
         }
@@ -74,15 +74,17 @@ public class NoteInstanceActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("res", response);
-                if (response.equals("success")) {
+                if (!response.contains("failure")) {
                     Toast.makeText(NoteInstanceActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
                     if (noteRow.getId() == 0) {
                         Intent intent = new Intent(NoteInstanceActivity.this, NotesActivity.class);
                         startActivity(intent);
                         finish();
                     }
-                } else if (response.equals("failure")) {
-                    Toast.makeText(NoteInstanceActivity.this, "Invalid Login Id/Password", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (response.contains("duplicate")) {
+                        Toast.makeText(NoteInstanceActivity.this, "Note titles must be unique.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }, new Response.ErrorListener() {
@@ -114,11 +116,18 @@ public class NoteInstanceActivity extends AppCompatActivity {
                 Log.d("POSITION", String.valueOf(position));
                 Log.d("TITLE", title);
                 Log.d("ID", String.valueOf(noteRow.getId()));
+
+
+                Log.i("NOTE IS DUPLICATE", String.valueOf(User.getInstance().noteIsDuplicate(noteRow)));
+                if (User.getInstance().noteIsDuplicate(new NoteRow(noteRow.getId(), titleText.getText().toString(), descriptionText.getText().toString()))) {
+                    data.put("title_is_duplicate", String.valueOf(true));
+                    return data;
+                }
 //
+                noteRow.setTitle(titleText.getText().toString());
+                noteRow.setDescription(descriptionText.getText().toString());
                 data.put("id", String.valueOf(noteRow.getId()));
                 data.put("user_id", String.valueOf(user.getId()));
-
-
                 data.put("title", titleText.getText().toString());
                 data.put("description", descriptionText.getText().toString());
                 return data;
@@ -132,7 +141,7 @@ public class NoteInstanceActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, closeNoteURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("res", response);
+                Log.i("CLOSE NOTE ON RESPONSE", response);
                 if (response.equals("success")) {
                     Intent intent = new Intent(NoteInstanceActivity.this, NotesActivity.class);
                     startActivity(intent);

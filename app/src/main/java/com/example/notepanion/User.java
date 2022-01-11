@@ -1,5 +1,7 @@
 package com.example.notepanion;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +46,15 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public boolean noteIsDuplicate(NoteRow nr){
+        for (int i = 0; i < noteRows.size(); i++) {
+            Log.i("NOTE IS DUPLICATE", noteRows.get(i).getTitle() + nr.getTitle());
+            Log.i("NOTE IS DUPLICATE", String.valueOf(noteRows.get(i).getId()) + String.valueOf(nr.getId()));
+            if (noteRows.get(i).getTitle().equals(nr.getTitle()) && noteRows.get(i).getId() != nr.getId())
+                return true;
+        }
+        return false;
     }
 }
